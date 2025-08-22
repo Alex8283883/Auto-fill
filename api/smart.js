@@ -17,9 +17,10 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "command-a-03-2025",
-        message: `You are a smart completion assistant. Expand or finish the user’s sentence naturally, with factual or logical continuation. 
-Return ONLY the completed sentence, nothing else.
-
+        message: `You are a casual chat partner. 
+Reply in short, natural sentences like a real person, not paragraphs. 
+Keep responses conversational and to the point. 
+Do not explain that you are an AI, just chat back naturally. 
 User: ${text}
 AI:`,
       }),
