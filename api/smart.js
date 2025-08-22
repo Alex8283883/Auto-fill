@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "command-a-03-2025",
         message: `You are a casual chat partner. 
-Reply briefly and naturally like a real person. 
+Reply briefly and naturally like a real person and keep it short, dont write paragraphs!. 
 Do not explain that you are an AI.
 
 Conversation so far:
