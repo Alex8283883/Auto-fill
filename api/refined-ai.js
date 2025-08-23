@@ -10,10 +10,9 @@ export default async function handler(req, res) {
 
   // Style levels → force "output only"
   const levels = {
-  rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
-  richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
-  royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions.",
-  therapist: "Rewrite with a calm, empathetic, and deep tone, like a thoughtful therapist. Keep it short, human, and reflective. Output ONLY the rewritten sentence. No explanations or introductions."
+    rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
+    richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
+    royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions."
   };
 
   const prompt = levels[level] || levels.rich;
@@ -34,10 +33,10 @@ export default async function handler(req, res) {
     const data = await response.json();
     let royalText = data.text?.trim() || text;
 
-    // 🧹 Cleanup: strip quotes + filler phrases
+    // 🧹 Cleanup: strip quotes + filler phrases like "Here’s..."
     royalText = royalText
-      .replace(/^["“”']+|["“”']+$/g, "")  
-      .replace(/^(here[’']?s|refined version:?)/i, "") 
+      .replace(/^["“”']+|["“”']+$/g, "")  // remove stray quotes
+      .replace(/^(here[’']?s|refined version:?)/i, "") // remove assistant-y intros
       .trim();
 
     res.status(200).json({ royal_text: royalText });
