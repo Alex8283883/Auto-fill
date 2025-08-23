@@ -31,6 +31,12 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+let royalText = data.text?.trim() || text;
+
+// 🧹 Strip leading/trailing quotes if present
+royalText = royalText.replace(/^["“”']+|["“”']+$/g, "");
+
+res.status(200).json({ royal_text: royalText });
     const royalText = data.text?.trim() || text;
 
     res.status(200).json({ royal_text: royalText });
