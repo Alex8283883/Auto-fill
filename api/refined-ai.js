@@ -8,12 +8,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "No text provided" });
   }
 
-  // Style levels → concise, conversational, single-sentence
+  // Style levels → force "output only"
   const levels = {
-  rich: "You are a rewriter, not an assistant. Rewrite only. Return exactly one short sentence in smooth modern English. Do not explain, do not add commentary, do not say anything except the rewritten text.",
-  richer: "You are a rewriter, not an assistant. Rewrite only. Return exactly one short refined English sentence. No commentary, no assistant phrases.",
-  royal: "You are a rewriter, not an assistant. Rewrite only. Return exactly one short regal-style English sentence. Nothing else, no quotes, no explanations."
-};
+    rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
+    richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
+    royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions."
+  };
 
   const prompt = levels[level] || levels.rich;
 
@@ -33,8 +33,11 @@ export default async function handler(req, res) {
     const data = await response.json();
     let royalText = data.text?.trim() || text;
 
-    // 🧹 Strip leading/trailing quotes (handles " “ ” ')
-    royalText = royalText.replace(/^["“”']+|["“”']+$/g, "");
+    // 🧹 Cleanup: strip quotes + filler phrases like "Here’s..."
+    royalText = royalText
+      .replace(/^["“”']+|["“”']+$/g, "")  // remove stray quotes
+      .replace(/^(here[’']?s|refined version:?)/i, "") // remove assistant-y intros
+      .trim();
 
     res.status(200).json({ royal_text: royalText });
   } catch (err) {
