@@ -12,9 +12,8 @@ export default async function handler(req, res) {
   const levels = {
   rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
   richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
-  royal: "Rewrite into short, elevated English with a regal tone, using beautiful and dignified vocabulary suited for a noble voice. Output ONLY the rewritten sentence. No explanations or introductions."
+  royal: "Rewrite into short, regal English with graceful vocabulary. Keep it noble yet concise—one single sentence only. Output ONLY the rewritten sentence. No explanations or introductions."
 };
-
   const prompt = levels[level] || levels.rich;
 
   try {
