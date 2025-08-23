@@ -10,11 +10,11 @@ export default async function handler(req, res) {
 
   // Style levels → force "output only"
   const levels = {
-    rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
-    richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
-    royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions.",
-    roast: "Rewrite with sharp, elegant wit—polite on the surface but cutting underneath. Think aristocratic insults, short and clever. Output ONLY the rewritten sentence. No explanations or introductions."
-  };
+  rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
+  richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
+  royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions.",
+  therapist: "Rewrite with a calm, empathetic, and profound tone like a deep-thinking therapist. It should sound thoughtful, supportive, and reflective, as if guiding someone to self-awareness. Keep it short but weighty. Output ONLY the rewritten sentence. No explanations or introductions."
+};
 
   const prompt = levels[level] || levels.rich;
 
