@@ -12,7 +12,8 @@ export default async function handler(req, res) {
   const levels = {
     rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
     richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
-    royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions."
+    royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions.",
+    roast: "Rewrite with sharp, elegant wit—polite on the surface but cutting underneath. Think aristocratic insults, short and clever. Output ONLY the rewritten sentence. No explanations or introductions."
   };
 
   const prompt = levels[level] || levels.rich;
@@ -33,10 +34,10 @@ export default async function handler(req, res) {
     const data = await response.json();
     let royalText = data.text?.trim() || text;
 
-    // 🧹 Cleanup: strip quotes + filler phrases like "Here’s..."
+    // 🧹 Cleanup: strip quotes + filler phrases
     royalText = royalText
-      .replace(/^["“”']+|["“”']+$/g, "")  // remove stray quotes
-      .replace(/^(here[’']?s|refined version:?)/i, "") // remove assistant-y intros
+      .replace(/^["“”']+|["“”']+$/g, "")  
+      .replace(/^(here[’']?s|refined version:?)/i, "") 
       .trim();
 
     res.status(200).json({ royal_text: royalText });
