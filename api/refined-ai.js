@@ -13,8 +13,8 @@ export default async function handler(req, res) {
   rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
   richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
   royal: "Rewrite into short, regal English suitable for casual speech. Output ONLY the rewritten sentence. No explanations or introductions.",
-  therapist: "Rewrite with a calm, empathetic, and profound tone like a deep-thinking therapist. It should sound thoughtful, supportive, and reflective, as if guiding someone to self-awareness. Keep it short but weighty. Output ONLY the rewritten sentence. No explanations or introductions."
-};
+  therapist: "Rewrite with a calm, empathetic, and deep tone, like a thoughtful therapist. Keep it short, human, and reflective. Output ONLY the rewritten sentence. No explanations or introductions."
+  };
 
   const prompt = levels[level] || levels.rich;
 
