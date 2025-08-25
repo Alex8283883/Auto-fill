@@ -1,30 +1,23 @@
-// memory store (per userId/session)
-const sessions = {};
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { text, userId } = req.body;
-  if (!text || !userId) {
-    return res.status(400).json({ error: "No text or userId provided" });
+  const { text, level } = req.body;
+  if (!text) {
+    return res.status(400).json({ error: "No text provided" });
   }
 
+  // Style levels → force "output only"
+  const levels = {
+    rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
+    richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
+    royal: "Rewrite this into short, regal English suitable for casual speech. Keep it brief, no paragraphs. Output ONLY the rewritten sentence. No explanations or introductions."
+  };
+
+  const prompt = levels[level] || levels.rich;
+
   try {
-    // initialize session if not exists
-    if (!sessions[userId]) {
-      sessions[userId] = [];
-    }
-
-    // push user message
-    sessions[userId].push({ role: "user", content: text });
-
-    // build conversation string
-    const conversation = sessions[userId]
-      .map(msg => `${msg.role === "user" ? "User" : "AI"}: ${msg.content}`)
-      .join("\n");
-
     const response = await fetch("https://api.cohere.ai/v1/chat", {
       method: "POST",
       headers: {
@@ -33,24 +26,20 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "command-a-03-2025",
-        message: `You are a casual chat partner. 
-Reply briefly and naturally like a real person and keep it short, dont write paragraphs!. 
-Do not explain that you are an AI.
-
-Conversation so far:
-${conversation}
-AI:`,
+        message: `${prompt}\n\n${text}`,
       }),
     });
 
     const data = await response.json();
+    let royalText = data.text?.trim() || text;
 
-    const smartText = data.text?.trim() || text;
+    // 🧹 Cleanup: strip quotes + filler phrases like "Here’s..."
+    royalText = royalText
+      .replace(/^["“”']+|["“”']+$/g, "")  // remove stray quotes
+      .replace(/^(here[’']?s|refined version:?)/i, "") // remove assistant-y intros
+      .trim();
 
-    // store AI reply in memory
-    sessions[userId].push({ role: "ai", content: smartText });
-
-    res.status(200).json({ smart_text: smartText });
+    res.status(200).json({ royal_text: royalText });
   } catch (err) {
     console.error("Cohere API Error:", err);
     res.status(500).json({ error: "Failed to contact AI" });
