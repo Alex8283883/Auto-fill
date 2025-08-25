@@ -5,11 +5,10 @@ export default async function handler(req, res) {
 
   const { difficulty } = req.body;
 
-  // Difficulty → prompt style
   const difficulties = {
-    easy: "Make a very simple quiz question with 3 options.",
-    medium: "Make a medium quiz question with 4 options.",
-    hard: "Make a tricky quiz question with 4 options."
+    easy: "Create a very simple quiz question with 3 options.",
+    medium: "Create a medium difficulty quiz question with 4 options.",
+    hard: "Create a tricky quiz question with 4 options."
   };
 
   const prompt = difficulties[difficulty] || difficulties.easy;
@@ -23,21 +22,30 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "command-a-03-2025",
-        message: `${prompt}\nFormat ONLY as JSON like this:\n{"question": "...", "options": ["...","...","..."], "answer": "..."}`,
+        message: `${prompt}
+Make sure the output is ONLY valid JSON in this exact format:
+{"question":"...","options":["...","...","..."],"answer":"..."}
+Do not include explanations. The question must be different each time.`,
       }),
     });
 
     const data = await response.json();
+    let raw = data.text || "";
     let quiz = null;
 
+    // Extract JSON safely (regex in case extra text is returned)
     try {
-      quiz = JSON.parse(data.text);
+      const match = raw.match(/\{[\s\S]*\}/);
+      quiz = match ? JSON.parse(match[0]) : null;
     } catch (e) {
-      console.error("JSON parse failed:", data.text);
+      console.error("JSON parse failed:", raw);
+    }
+
+    if (!quiz) {
       quiz = {
         question: "Error generating question",
         options: ["Try Again"],
-        answer: "Try Again"
+        answer: "Try Again",
       };
     }
 
