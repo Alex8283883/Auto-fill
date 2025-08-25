@@ -10,11 +10,11 @@ export default async function handler(req, res) {
 
   // Style levels → force "output only"
   const levels = {
-    rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
-    richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
-    royal: "Rewrite this into short, regal English suitable for casual speech. Keep it brief, no paragraphs. Output ONLY the rewritten sentence. No explanations or introductions.",
-    shakespear: "Rewrite this in short, Shakespearean-style English. Use simple olden words (thee, thou, dost, aye, nay) but keep it clear and easy to understand. Output ONLY the rewritten sentence. No explanations or introductions."
-  };
+  rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
+  richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
+  royal: "Rewrite this into short, regal English suitable for casual speech. Keep it brief, no paragraphs. Output ONLY the rewritten sentence. No explanations or introductions.",
+  shakespear: "Take this sentence and complete it in a poetic, Shakespearean style. Do NOT use old words like thee/thou/dost. Instead, give it deeper meaning with imagery or metaphor, while keeping it short and clear. Output ONLY the poetic completion."
+};
 
   const prompt = levels[level] || levels.rich;
 
