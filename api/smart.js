@@ -3,20 +3,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { text, level } = req.body;
-  if (!text) {
-    return res.status(400).json({ error: "No text provided" });
-  }
+  const { question, difficulty } = req.body;
 
-  // Style levels → force "output only"
-  const levels = {
-  rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
-  richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
-  royal: "Rewrite this into short, regal English suitable for casual speech. Keep it brief, no paragraphs. Output ONLY the rewritten sentence. No explanations or introductions.",
-  smart: "Rewrite this into short, refined English with elegance. If text inside parentheses () exists, treat it as an instruction to expand or answer directly in place, so the final output flows naturally. Remove the parentheses in the final output. Output ONLY the rewritten sentence. No explanations or introductions."
-};
+  // Difficulty levels → you can make them harder with AI
+  const difficulties = {
+    easy: "Make a very simple quiz question with 3 options.",
+    medium: "Make a moderately difficult quiz question with 4 options.",
+    hard: "Make a tricky quiz question with 4 options that require some thinking."
+  };
 
-  const prompt = levels[level] || levels.rich;
+  const prompt = difficulties[difficulty] || difficulties.easy;
 
   try {
     const response = await fetch("https://api.cohere.ai/v1/chat", {
@@ -27,22 +23,22 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "command-a-03-2025",
-        message: `${prompt}\n\n${text}`,
+        message: `${prompt}\nFormat as JSON: {"question": "...", "options": ["A","B","C"], "answer": "B"}`,
       }),
     });
 
     const data = await response.json();
-    let royalText = data.text?.trim() || text;
+    let quiz = {};
 
-    // 🧹 Cleanup: strip quotes + filler phrases like "Here’s..."
-    royalText = royalText
-      .replace(/^["“”']+|["“”']+$/g, "")  // remove stray quotes
-      .replace(/^(here[’']?s|refined version:?)/i, "") // remove assistant-y intros
-      .trim();
+    try {
+      quiz = JSON.parse(data.text);
+    } catch {
+      quiz = { question: "Error generating question", options: ["N/A"], answer: "N/A" };
+    }
 
-    res.status(200).json({ royal_text: royalText });
+    res.status(200).json(quiz);
   } catch (err) {
-    console.error("Cohere API Error:", err);
+    console.error("Quiz API Error:", err);
     res.status(500).json({ error: "Failed to contact AI" });
   }
 }
