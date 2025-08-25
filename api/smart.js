@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   rich: "Rewrite into short, smooth modern English. Output ONLY the rewritten sentence. No explanations or introductions.",
   richer: "Rewrite into short, refined English with a touch of elegance. Output ONLY the rewritten sentence. No explanations or introductions.",
   royal: "Rewrite this into short, regal English suitable for casual speech. Keep it brief, no paragraphs. Output ONLY the rewritten sentence. No explanations or introductions.",
-  shakespear: "Take this sentence and complete it in a poetic, Shakespearean style. Do NOT use old words like thee/thou/dost. Instead, give it deeper meaning with imagery or metaphor, while keeping it short and clear. Output ONLY the poetic completion."
+  smart: "Rewrite this into short, refined English with elegance. If text inside parentheses () exists, treat it as an instruction to expand or answer directly in place, so the final output flows naturally. Remove the parentheses in the final output. Output ONLY the rewritten sentence. No explanations or introductions."
 };
 
   const prompt = levels[level] || levels.rich;
